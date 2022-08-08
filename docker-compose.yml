@@ -1,0 +1,42 @@
+# Use postgres/example user/password credentials
+version: '0.2'
+
+services:
+
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 'word234'
+      POSTGRES_USER: 'admin'
+      POSTGRES_DB: 'baserow'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+   
+  baserow:
+    container_name: baserow
+    image: baserow/baserow:latest
+    environment:
+      BASEROW_PUBLIC_URL: 'http://192.168.1.136'
+      DATABASE_HOST: db 
+      DATABASE_NAME: 'baserow' 
+      DATABASE_USER: 'admin'
+      DATABASE_PASSWORD: 'word234'
+      DATABASE_PORT: 5432
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - baserow_data:/baserow/data
+
+volumes:
+  baserow_data:
+  postgres_data: 
